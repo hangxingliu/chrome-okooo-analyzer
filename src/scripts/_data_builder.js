@@ -1,12 +1,21 @@
 //@ts-check
-/// <reference path="../types.d.ts" />
+/// <reference path="../../dev/types.d.ts" />
+
+// ===================================================
+//                 **FBI Warning!**
+//
+//   This file is copy from: dev/test/analyzer.js
+//         Dont modify this file manually!
+//
+// ===================================================
+
 
 /**
  * @param {string} dateStr
  * @param {HTMLDivElement} tableRow
  * @returns {MatchInfo}
  */
-function getMatchBasicInfoFrom(dateStr, tableRow) {
+export function getMatchBasicInfoFrom(dateStr, tableRow) {
 	const getElement = (s, p = null, n = '') => {
 		/** @type {HTMLElement} */
 		const el = (p || tableRow).querySelector(s);
@@ -149,7 +158,7 @@ function getMatchBasicInfoFrom(dateStr, tableRow) {
 /**
  * @param {HTMLDivElement} ajaxResultDom
  */
-function getMatchAdvancedInfoFrom(ajaxResultDom) {
+export function getMatchAdvancedInfoFrom(ajaxResultDom) {
 	const _matchResultMap = { '胜': 1, '平': 2, '负': 3};
 	const getElement = (s, p = null, n = '') => {
 		/** @type {HTMLElement} */
@@ -216,7 +225,7 @@ function getMatchAdvancedInfoFrom(ajaxResultDom) {
  * @param {MatchInfo} _newInfo
  * @returns {MatchInfo}
  */
-function mergeMatchInfo(_originalInfo, _newInfo) {
+export function mergeMatchInfo(_originalInfo, _newInfo) {
 	/** @type {(a: MatchInfo) => MatchInfo} */
 	const clone = a => JSON.parse(JSON.stringify(a));
 
@@ -246,8 +255,3 @@ function mergeMatchInfo(_originalInfo, _newInfo) {
 	return result;
 }
 
-// -----magic_number_4863902_means_end-----
-
-window['mergeMatchInfo'] = mergeMatchInfo;
-window['getMatchBasicInfoFrom'] = getMatchBasicInfoFrom;
-window['getMatchAdvancedInfoFrom'] = getMatchAdvancedInfoFrom;

@@ -1,6 +1,6 @@
 //@ts-check
 import { $$, $ } from "./_dom_utils";
-import { getDateStringFromPage } from "./_from_page";
+import { getDateStringFromPage } from "./_get_date_str";
 import { logOnPage, initLogOnPage } from "./_log_on_page";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	main();
 });
 
-function main() { 
+function main() {
 	const $content = $('#content');
 	if (!$content) return;
 
@@ -17,14 +17,14 @@ function main() {
 	logOnPage(`Date:       ${dateString}`);
 	logOnPage(`Item count: ${$items.length}`);
 
-	for (const $item of $items) { 
+	for (const $item of $items) {
 		const $prefix = $('.liansai', $item);
 		const $btn = createGetDataButton();
 		$item.insertBefore($btn, $prefix);
 	}
 }
 
-function createGetDataButton() { 
+function createGetDataButton() {
 	const $wrapper = document.createElement('div');
 	$wrapper.setAttribute('style', [
 		`position: absolute; left: -63px; width: 60px;`,
