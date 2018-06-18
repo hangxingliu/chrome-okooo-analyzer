@@ -57,5 +57,8 @@ type MatchInfo = {
 	/** example: [1,2] => 胜/平 */
 	actualHalf: number[];
 
+	/** example: 暂停销售 ... */
+	remark?: string;
+
 	details?: any;
 };

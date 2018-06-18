@@ -56,8 +56,14 @@ export function getMatchBasicInfoFrom(dateStr, tableRow) {
 	// ================
 	// 时间相关
 	const titleTime = getAttr('.shijian', 'title');
-	if (titleTime.indexOf(dateStr) < 0)
-		throw new Error(`date string "${dateStr}" is missing in the title "${titleTime}"!`);
+	if (titleTime.indexOf(dateStr) < 0) {
+		console.warn(`date string "${dateStr}" is missing in the title "${titleTime}"!`);
+		const maybeMatcher = titleTime.match(/\d{4}-\d{2}-\d{2}/);
+		if (!maybeMatcher)
+			throw new Error(`datetime info is missing in football match datetime title title "${titleTime}"`);
+		// 刷新准确时间
+		dateStr = maybeMatcher[0];
+	}
 	const mtime = getAttr('.shijian', 'mtime');
 	const dateMatch = dateStr.match(/(\d{4})-(\d{2})-(\d{2})/);
 	const mtimeMatch = mtime.match(/(\d{2}):(\d{2})/);
@@ -80,7 +86,7 @@ export function getMatchBasicInfoFrom(dateStr, tableRow) {
 	const shenpf = getElement('.shenpf');
 	const leftName = getText('.zhu .zhum', shenpf);
 	const leftOdds = getText('.zhu .peilv', shenpf);
-	const leftRank = getText('.zhu .paim .p2', shenpf);
+	const leftRank = getText('.zhu .paim p:nth-child(1)', shenpf); //如果使用 .zhu .paim .p2 可能导致有些条目无法匹配
 	const leftRankMatch = leftRank.match(/\[(\d+)\]/);
 	if (!leftRankMatch) throw new Error(`"${leftRank}" is invalid rank for ${leftName}`);
 	if (isNaN(parseFloat(leftOdds))) throw new Error(`"${leftOdds}" is invalid odds for ${leftName}`);
@@ -89,7 +95,7 @@ export function getMatchBasicInfoFrom(dateStr, tableRow) {
 
 	const rightName = getText('.fu .zhum', shenpf);
 	const rightOdds = getText('.fu .peilv', shenpf);
-	const rightRank = getText('.fu .paim .p2', shenpf);
+	const rightRank = getText('.fu .paim p:nth-child(1)', shenpf); //如果使用 .zhu .paim .p2 可能导致有些条目无法匹配
 	const rightRankMatch = rightRank.match(/\[(\d+)\]/);
 	if (!rightRankMatch) throw new Error(`"${rightRank}" is invalid rank for ${rightName}`);
 	if (isNaN(parseFloat(rightOdds))) throw new Error(`"${rightOdds}" is invalid odds for ${rightName}`);
@@ -103,24 +109,27 @@ export function getMatchBasicInfoFrom(dateStr, tableRow) {
 
 	// ================
 	// 让球胜负平
-	const rqSPF = getElement('.rangqiuspf');
-	const rq = getText('.zhu .rangqiu');
-	if (isNaN(parseFloat(rq))) throw new Error(`"${rq}" is invalid handicap`);
-	result.handicap = parseFloat(rq);
+	const isClosed = tableRow.querySelector('.rangno .zi');
+	if (isClosed) {
+		result.handicap = 999;
+		result.oddsWithHandicap = [0, 0, 0];
+		result.remark = (result.remark || '') + isClosed.innerHTML + ' ';
+	} else {
+		const rqSPF = getElement('.rangqiuspf');
+		const rq = getText('.zhu .rangqiu, .zhu .rangqiuzhen');
+		if (isNaN(parseFloat(rq))) throw new Error(`"${rq}" is invalid handicap`);
+		result.handicap = parseFloat(rq);
 
-	const rqLeftOdds = getText('.zhu .peilv', rqSPF);
-	if (isNaN(parseFloat(rqLeftOdds))) throw new Error(`"${leftOdds}" is invalid odds for ${leftName}`);
-	result.left = leftName;
-	result.rankLeft = parseInt(leftRankMatch[1], 10);
+		const rqLeftOdds = getText('.zhu .peilv', rqSPF);
+		if (isNaN(parseFloat(rqLeftOdds))) throw new Error(`"${leftOdds}" is invalid odds for ${leftName}`);
 
-	const rqRightOdds = getText('.fu .peilv', rqSPF);
-	if (isNaN(parseFloat(rqRightOdds))) throw new Error(`"${rightOdds}" is invalid odds for ${rightName}`);
-	result.right = rightName;
-	result.rankRight = parseInt(rightRankMatch[1], 10);
+		const rqRightOdds = getText('.fu .peilv', rqSPF);
+		if (isNaN(parseFloat(rqRightOdds))) throw new Error(`"${rightOdds}" is invalid odds for ${rightName}`);
 
-	const rqSameOdds = getText('.ping .peilv', rqSPF);
-	if (isNaN(parseFloat(rqSameOdds))) throw new Error(`"${sameOdds}" is invalid odds`);
-	result.oddsWithHandicap = [rqLeftOdds, rqSameOdds, rqRightOdds].map(v => parseFloat(v));
+		const rqSameOdds = getText('.ping .peilv', rqSPF);
+		if (isNaN(parseFloat(rqSameOdds))) throw new Error(`"${sameOdds}" is invalid odds`);
+		result.oddsWithHandicap = [rqLeftOdds, rqSameOdds, rqRightOdds].map(v => parseFloat(v));
+	}
 
 	// =================
 	// 是否已经结束 (是否标有结果)
@@ -238,6 +247,12 @@ export function mergeMatchInfo(_originalInfo, _newInfo) {
 	// 不合并排名
 	delete newInfo.rankLeft;
 	delete newInfo.rankRight;
+
+	// 暂停销售之类的原因导致的
+	if (newInfo.handicap > 100) {
+		delete newInfo.handicap;
+		delete newInfo.oddsWithHandicap;
+	}
 
 	const result = Object.assign({}, originalInfo, newInfo);
 	if (!originalInfo.isFinished) {

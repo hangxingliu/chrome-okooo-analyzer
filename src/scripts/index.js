@@ -1,7 +1,8 @@
 //@ts-check
 import { $$, $ } from "./_dom_utils";
-import { getDateStringFromPage } from "./_get_date_str";
-import { logOnPage, initLogOnPage } from "./_log_on_page";
+import { getDateStringFromElement } from "./_get_date_str";
+import { logOnPage, initLogOnPage, LOG_ERROR } from "./_log_on_page";
+import { getMatchBasicInfoFrom } from "./_data_builder";
 
 document.addEventListener('DOMContentLoaded', () => {
 	initLogOnPage();
@@ -12,16 +13,50 @@ function main() {
 	const $content = $('#content');
 	if (!$content) return;
 
-	const dateString = getDateStringFromPage();
-	const $items = $$('.touzhu_1', $content);
-	logOnPage(`Date:       ${dateString}`);
-	logOnPage(`Item count: ${$items.length}`);
+	// const dateString = getDateStringFromPage();
 
-	for (const $item of $items) {
-		const $prefix = $('.liansai', $item);
-		const $btn = createGetDataButton();
-		$item.insertBefore($btn, $prefix);
+	/** @type {{date: string; el: HTMLDivElement; isEnd: boolean}[]} */
+	const items = [];
+	/** @type {string[]} */
+	const dateArray = [];
+
+	const $groups = $$('.touzhu', $content);
+	logOnPage(`date group: ${$groups.length}`);
+
+	for (const $group of $groups) {
+		const date = getDateStringFromElement($group);
+		if (!date) return;
+		dateArray.push(date);
+
+		const $items = $$('.touzhu_1', $group);
+		$items.forEach($it => {
+			const isEnd = $it.getAttribute('data-end') == "1";
+			//@ts-ignore
+			items.push({ date, isEnd, el: $it });
+		});
 	}
+	logOnPage(`date: ${dateArray.length == 1 ? dateArray[0] : (`${dateArray[0]}~${dateArray[dateArray.length - 1]}`)}`);
+	logOnPage(`items: ${items.length} (end: ${items.filter(it => it.isEnd).length})`);
+
+	// 注入获取详细信息的菜单
+	for (const { el } of items) {
+		const $prefix = $('.liansai', el);
+		const $btn = createGetDataButton();
+		el.insertBefore($btn, $prefix);
+	}
+
+	for (const { el, date } of items) {
+		try {
+			const basicInfo = getMatchBasicInfoFrom(date, el);
+			console.log(basicInfo);
+
+		} catch (ex) {
+			const context = el.innerText.replace('收集数据', '').replace(/\s/g, '').slice(0, 20);
+			logOnPage(`Error: ${ex.message || String(ex)}`, LOG_ERROR);
+			logOnPage(`Error details: getMatchBasicInfoFrom { ${context} }`, LOG_ERROR);
+		}
+	}
+
 }
 
 function createGetDataButton() {

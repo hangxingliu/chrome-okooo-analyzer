@@ -6,7 +6,7 @@ src:
       - "popup-page/index.html"
     scripts:
     #   - "settings-page/index.js"
-      - "scripts/*"
+      - "scripts/index.js"
     concat:
     styles:
     #   - "settings-page/index.scss"
