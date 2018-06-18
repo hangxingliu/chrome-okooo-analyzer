@@ -16,6 +16,7 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "@types/chrome": "0.0.48",
+    "@types/mocha": "^5.2.2",
     "@types/node": "^8.10.16",
     "async": "^2.6.0",
     "babel-core": "^6.26.3",
@@ -30,13 +31,15 @@
     "fs-extra": "^4.0.3",
     "glob": "^7.1.2",
     "js-yaml": "^3.11.0",
+    "mocha": "^5.2.0",
     "node-sass": "^4.9.0",
     "postcss": "^6.0.22",
     "watch": "^1.0.2",
     "watchify": "^3.11.0"
   },
   "dependencies": {
-    "bulma": "^0.7.1"
+    "bulma": "^0.7.1",
+    "dexie": "^2.0.4"
   },
   "repository": {
     "type": "git",

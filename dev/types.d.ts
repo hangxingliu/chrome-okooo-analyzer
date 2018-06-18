@@ -5,13 +5,18 @@ type MatchInfo = {
 	 * example: 2018-06-18-1012
 	 * format: ${yyyy}-${mm}-${dd}-${data-morder}
 	 */
-	uuid: string;
+	matchId: string;
+
+	/** example: 1000214 (可用于查询分析数据之类的) */
+	rawMid: string;
 
 	/** example: 2018-06-18 */
 	date: string;
 
 	/** example: 20:00 */
 	time: string;
+
+	unixTimestamp: number;
 
 	/** example: 世界杯 */
 	type: string;
@@ -20,7 +25,7 @@ type MatchInfo = {
 	rankLeft: number;
 
 	right: string;
-	rankRight; number;
+	rankRight: number;
 
 	/** 让球 */
 	handicap: number;
@@ -38,10 +43,12 @@ type MatchInfo = {
 	/** 半全场赔率 */
 	halfOdds: OddsMap;
 
-	/** 未知 | 胜 | 平 | 负 */
+	isFinished: boolean;
+
+	/** 0: 未知 | 1: 胜 | 2: 平 | 3: 负 */
 	actualWin: 0 | 1 | 2 | 3;
 
-	/** 未知 | 胜 | 平 | 负 */
+	/** 0: 未知 | 1: 胜 | 2: 平 | 3: 负 */
 	actualWinWithHandicap: 0 | 1 | 2 | 3;
 
 	/** example: [1,2] => 1:2 */
@@ -49,4 +56,6 @@ type MatchInfo = {
 
 	/** example: [1,2] => 胜/平 */
 	actualHalf: number[];
+
+	details?: any;
 };
