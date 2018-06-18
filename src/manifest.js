@@ -27,7 +27,7 @@ fs.writeFileSync(targetFile, JSON.stringify({
 		run_at: 'document_start',
 		all_frames: false,
 		js: ["dist/scripts/index.js"],
-		css: ['dist/stylesheets/index.css'],
+		// css: ['dist/stylesheets/index.css'],
 	}],
 
 	browser_action: {
