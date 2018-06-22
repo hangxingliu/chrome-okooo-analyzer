@@ -3,7 +3,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 pushd "$DIR";
 
-FROM="../../dev/test/analyzer.js";
+FROM="../../dev/analyzer.js";
 TO="_data_builder.js";
 
 if [[ ! -f "$FROM" ]]; then

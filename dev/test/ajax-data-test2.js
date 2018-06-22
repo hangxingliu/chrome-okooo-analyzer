@@ -12,13 +12,13 @@
 	/** @type {HTMLDivElement} */
 	let testEl = null;
 
-	const expected = window['__expected_result1'];
-	const resultExport = '__actual_result1';
+	const expected = window['__expected_result2'];
+	const resultExport = '__actual_result2';
 	let result = null;
 
-	describe('Analyze', () => {
+	describe('Analyze 2', () => {
 		it('# fetch html', () => {
-			return fetch('../example-1.html')
+			return fetch('../example-2.html')
 				.then(res => {
 					if (res.status != 200)
 						throw new Error('Could not fetch ../example.html');
@@ -35,6 +35,7 @@
 			result = window['getMatchAdvancedInfoFrom'](testEl);
 			if (!result) throw new Error(`Empty result`);
 
+			console.log(result);
 			window[resultExport] = result;
 		});
 

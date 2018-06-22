@@ -1,5 +1,5 @@
 //@ts-check
-/// <reference path="../../dev/types.d.ts" />
+/// <reference path="./types.d.ts" />
 
 // ===================================================
 //                 **FBI Warning!**
@@ -57,7 +57,7 @@ export function getMatchBasicInfoFrom(dateStr, tableRow) {
 	// 时间相关
 	const titleTime = getAttr('.shijian', 'title');
 	if (titleTime.indexOf(dateStr) < 0) {
-		console.warn(`date string "${dateStr}" is missing in the title "${titleTime}"!`);
+		// console.warn(`date string "${dateStr}" is missing in the title "${titleTime}"!`);
 		const maybeMatcher = titleTime.match(/\d{4}-\d{2}-\d{2}/);
 		if (!maybeMatcher)
 			throw new Error(`datetime info is missing in football match datetime title title "${titleTime}"`);
@@ -116,7 +116,7 @@ export function getMatchBasicInfoFrom(dateStr, tableRow) {
 		result.remark = (result.remark || '') + isClosed.innerHTML + ' ';
 	} else {
 		const rqSPF = getElement('.rangqiuspf');
-		const rq = getText('.zhu .rangqiu, .zhu .rangqiuzhen');
+		const rq = getText('.zhu .rangqiu, .zhu .rangqiuzhen', rqSPF);
 		if (isNaN(parseFloat(rq))) throw new Error(`"${rq}" is invalid handicap`);
 		result.handicap = parseFloat(rq);
 
@@ -189,7 +189,7 @@ export function getMatchAdvancedInfoFrom(ajaxResultDom) {
 	};
 
 	const scoreOdds = {};
-	const $scoreItems = getElements('.mrfg .ping.weiks');
+	const $scoreItems = getElements('.mrfg .ping');
 	for (const $item of $scoreItems) {
 		const scores = getText('.pingd .peilv', $item, '比分');
 		const odds = getText('.pingd .peilv_1', $item, '买比分的赔率');
@@ -198,7 +198,7 @@ export function getMatchAdvancedInfoFrom(ajaxResultDom) {
 
 	const goalOdds = {};
 	// nth-child(2): 父元素的第二个儿子
-	const $goalItems = getElements('.jnm:nth-child(2) .ping.weiks');
+	const $goalItems = getElements('.jnm:nth-child(2) .ping');
 	for (const $item of $goalItems) {
 		const goals = getText('.pingd .peilv', $item, '进球');
 		const odds = getText('.pingd .peilv_1', $item, '买进球的赔率');
@@ -209,7 +209,7 @@ export function getMatchAdvancedInfoFrom(ajaxResultDom) {
 	let actualHalf = [0, 0];
 	const halfOdds = {};
 	// nth-child(2): 父元素的第三个儿子
-	const $halfItems = getElements('.jnm:nth-child(3) .ping.weiks');
+	const $halfItems = getElements('.jnm:nth-child(3) .ping');
 	for (const $item of $halfItems) {
 		const half = getText('.pingd .peilv', $item, '半全场');
 		const odds = getText('.pingd .peilv_1', $item, '买半全场的赔率');
