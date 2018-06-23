@@ -4,7 +4,7 @@ import Dexie from 'dexie';
 const db = new Dexie('okooo-analyzer-db');
 
 db.version(1).stores({
-	matches: 'matchId,type,date,time,unixTimestamp,left,right,isFinished,details',
+	matches: 'matchId,type,date,time,unixTimestamp,left,right,isFinished',
 });
 
 const tbMatches = db.table('matches');

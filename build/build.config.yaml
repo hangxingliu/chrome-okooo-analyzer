@@ -5,11 +5,12 @@ src:
     pages:
       - "popup-page/index.html"
     scripts:
-    #   - "settings-page/index.js"
+      - "popup-page/index.js"
       - "scripts/index.js"
+      - "scripts/background/index.js"
     concat:
     styles:
-    #   - "settings-page/index.scss"
+      - "popup-page/index.scss"
     #   - "stylesheets/*"
 
 dist:

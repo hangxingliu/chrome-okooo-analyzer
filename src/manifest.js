@@ -20,6 +20,11 @@ fs.writeFileSync(targetFile, JSON.stringify({
 
 	description: pkg.description,
 
+	background: {
+		scripts: ["dist/scripts/background/index.js"],
+		persistent: true
+	},
+
 	content_scripts: [{
 		matches: [
 			'*://www.okooo.com/jingcai/*',

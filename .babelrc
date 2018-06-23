@@ -2,6 +2,6 @@
 	"presets": [
 		"env"
 	],
-	"compact": "true",
+	"compact": "false",
 	"comments": false
 }
