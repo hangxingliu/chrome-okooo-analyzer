@@ -256,16 +256,22 @@ function mergeMatchInfo(_originalInfo, _newInfo) {
 		delete newInfo.actualHalf;
 
 	const result = Object.assign({}, originalInfo, newInfo);
-	if (!originalInfo.isFinished) {
-		if (!newInfo.isFinished) {
+	const oriFinished = originalInfo.isFinished;
+	const newFinished = newInfo.isFinished;
+	if (!oriFinished) {
+		if (!newFinished) {
 			// 均没有结束
 			result.actualWin = 0;
 			result.actualWinWithHandicap = 0;
 			result.actualScores = [0, 0];
 			result.actualHalf = [0, 0];
 		}
-	} else if (!newInfo.isFinished) {
-		throw new Error(`originalInfo.isFinished is true, but newInfo.isFinished is false !`);
+	} else if (!newFinished) {
+		// 本来已经结束了, 但是新的数据却没有结束
+		throw new Error([
+			`originalInfo.isFinished is ${JSON.stringify(oriFinished)}`,
+			`but newInfo.isFinished is ${JSON.stringify(newFinished)}!`
+		].join(', '));
 	}
 
 	if (!result.actualHalf)
