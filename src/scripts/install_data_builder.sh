@@ -24,7 +24,7 @@ awk '
 		print "";
 	}
 	# typescript reference
-	/reference\s+path/ { gsub(/\.\.\//, "../../dev/", $0); }
+	/reference\s+path/ { gsub(/\.\//, "../../dev/", $0); }
 	/magic_number_4863902_means_end/ { exit; }
 	/^function/ { printf "export "; }
 	{

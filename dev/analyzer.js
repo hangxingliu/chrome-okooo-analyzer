@@ -245,6 +245,16 @@ function mergeMatchInfo(_originalInfo, _newInfo) {
 		delete newInfo.oddsWithHandicap;
 	}
 
+	// 合并赔率之类的数据
+	if (isObject(originalInfo.scoreOdds))
+		newInfo.scoreOdds = Object.assign({}, newInfo.scoreOdds, originalInfo.scoreOdds);
+	if (isObject(originalInfo.goalOdds))
+		newInfo.goalOdds = Object.assign({}, newInfo.goalOdds, originalInfo.goalOdds);
+	if (isObject(originalInfo.halfOdds))
+		newInfo.halfOdds = Object.assign({}, newInfo.halfOdds, originalInfo.halfOdds);
+	if (Array.isArray(newInfo.actualHalf) && newInfo.actualHalf[0] == 0)
+		delete newInfo.actualHalf;
+
 	const result = Object.assign({}, originalInfo, newInfo);
 	if (!originalInfo.isFinished) {
 		if (!newInfo.isFinished) {
@@ -258,8 +268,11 @@ function mergeMatchInfo(_originalInfo, _newInfo) {
 		throw new Error(`originalInfo.isFinished is true, but newInfo.isFinished is false !`);
 	}
 
+	if (!result.actualHalf)
+		result.actualHalf = [0, 0];
 	return result;
 }
+function isObject(obj) { return typeof obj == 'object' && obj; }
 
 // -----magic_number_4863902_means_end-----
 
