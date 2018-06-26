@@ -86,21 +86,29 @@ export function getMatchBasicInfoFrom(dateStr, tableRow) {
 	const shenpf = getElement('.shenpf');
 	const leftName = getText('.zhu .zhum', shenpf);
 	const leftOdds = getText('.zhu .peilv', shenpf);
-	const leftRank = getText('.zhu .paim p:nth-child(1)', shenpf); //如果使用 .zhu .paim .p2 可能导致有些条目无法匹配
-	const leftRankMatch = leftRank.match(/\[(\d+)\]/);
-	if (!leftRankMatch) throw new Error(`"${leftRank}" is invalid rank for ${leftName}`);
+	const leftRank = shenpf.querySelector('.zhu .paim p:nth-child(1)'); //如果使用 .zhu .paim .p2 可能导致有些条目无法匹配
 	if (isNaN(parseFloat(leftOdds))) throw new Error(`"${leftOdds}" is invalid odds for ${leftName}`);
 	result.left = leftName;
-	result.rankLeft = parseInt(leftRankMatch[1], 10);
+
+	if (leftRank) { // 如果存在排名
+		//@ts-ignore
+		const leftRankMatch = (leftRank.innerText || '').match(/\[(\d+)\]/);
+		if (!leftRankMatch) throw new Error(`"${leftRank}" is invalid rank for ${leftName}`);
+		result.rankLeft = parseInt(leftRankMatch[1], 10);
+	}
 
 	const rightName = getText('.fu .zhum', shenpf);
 	const rightOdds = getText('.fu .peilv', shenpf);
-	const rightRank = getText('.fu .paim p:nth-child(1)', shenpf); //如果使用 .zhu .paim .p2 可能导致有些条目无法匹配
-	const rightRankMatch = rightRank.match(/\[(\d+)\]/);
-	if (!rightRankMatch) throw new Error(`"${rightRank}" is invalid rank for ${rightName}`);
+	const rightRank = shenpf.querySelector('.fu .paim p:nth-child(1)'); //如果使用 .zhu .paim .p2 可能导致有些条目无法匹配
 	if (isNaN(parseFloat(rightOdds))) throw new Error(`"${rightOdds}" is invalid odds for ${rightName}`);
 	result.right = rightName;
-	result.rankRight = parseInt(rightRankMatch[1], 10);
+
+	if (rightRank) { // 如果存在排名
+		//@ts-ignore
+		const rightRankMatch = (rightRank.innerText || '').match(/\[(\d+)\]/);
+		if (!rightRankMatch) throw new Error(`"${rightRank}" is invalid rank for ${rightName}`);
+		result.rankRight = parseInt(rightRankMatch[1], 10);
+	}
 
 	const sameOdds = getText('.ping .peilv', shenpf);
 	if (isNaN(parseFloat(sameOdds))) throw new Error(`"${sameOdds}" is invalid odds`);
