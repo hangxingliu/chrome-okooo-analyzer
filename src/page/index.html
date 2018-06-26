@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="renderer" content="webkit" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0" />
+		<title>Okooo Analyzer</title>
+		<link rel="stylesheet" href="../../libs/bootstrap-4.1.0/bootstrap.min.css">
+		<link rel="stylesheet" href="../../libs/ionicons-4.2.0/css/ionicons.min.css">
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div id="appRoot">
+			<%- include("./components/navbar.ejs") %>
+			<div class="editor-wrapper">
+				<div class="left">
+					<div id="monacoEditor"></div>
+				</div>
+				<div class="right"></div>
+			</div>
+		</div>
+
+		<script src="../../libs/jquery-3.3.1/jquery-slim.min.js"></script>
+		<script src="../../libs/bootstrap-4.1.0/bootstrap.min.js"></script>
+
+
+		<script src="./index.js"></script>
+		<script src="../../libs/monaco-0.13.1/min/vs/loader.js"></script>
+		<script src="./monaco-loader.js"></script>
+	</body>
+</html>

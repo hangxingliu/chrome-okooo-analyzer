@@ -2,16 +2,16 @@ name: Chrome Extension Okooo Analyzer
 src:
     base: src
     assets:
+      - "page/monaco-loader.js"
     pages:
-      - "popup-page/index.html"
+      - "page/index.html"
     scripts:
-      - "popup-page/index.js"
+      - "page/index.js"
       - "scripts/index.js"
       - "scripts/background/index.js"
     concat:
     styles:
-      - "popup-page/index.scss"
-    #   - "stylesheets/*"
+      - "page/index.scss"
 
 dist:
     base: extension/dist
@@ -49,3 +49,5 @@ processor:
         babelrc: .babelrc
     browser_sync:
         enable: false
+    ejs:
+        true

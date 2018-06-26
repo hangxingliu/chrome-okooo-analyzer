@@ -1,7 +1,9 @@
 import { bulkUpdate, updateOne } from "../database/edit";
 import { query, count, queryTypes } from "../database/query";
 
-//@ts-check
+chrome.browserAction.onClicked.addListener(() =>
+	chrome.tabs.create({ url: chrome.extension.getURL('/dist/page/index.html') }));
+
 chrome.runtime.onConnect.addListener(port => {
 	if (port.name != "okooo-db") {
 		console.error(`unknown connection with name: ${port.name}`);

@@ -36,14 +36,18 @@ fs.writeFileSync(targetFile, JSON.stringify({
 	}],
 
 	browser_action: {
-		default_popup: "dist/popup-page/index.html",
 		default_icon: loadIcons(),
 	},
 
 	icons: loadIcons(),
 	permissions: [
 		'*://okooo.com/*',
-		'storage'
+		'storage',
+		'tabs'
+	],
+	web_accessible_resources: [
+		'libs/*',
+		'dist/page/*'
 	]
 }, null, '\t') + '\n'); // `insert_final_newline = true` in `.editorconfig`
 
